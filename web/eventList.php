@@ -23,7 +23,11 @@ function ciniki_filmschedule_web_eventList($ciniki, $settings, $business_id, $ar
 	$intl_currency_fmt = numfmt_create($rc['settings']['intl-default-locale'], NumberFormatter::CURRENCY);
 	$intl_currency = $rc['settings']['intl-default-currency'];
 
-	$type_strsql = '';
+	//
+	// Setup the current date
+	//
+	$today = new DateTime('now', new DateTimeZone($intl_timezone));
+
 	$strsql = "SELECT ciniki_filmschedule_events.id, "
 		. "ciniki_filmschedule_events.name, "
 		. "ciniki_filmschedule_events.showtime, "
@@ -39,10 +43,10 @@ function ciniki_filmschedule_web_eventList($ciniki, $settings, $business_id, $ar
 		. "WHERE ciniki_filmschedule_events.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
 		. "";
 	if( isset($args['type']) && $args['type'] == 'past' ) {
-		$strsql .= "AND ciniki_filmschedule_events.showtime < DATE() "
+		$strsql .= "AND ciniki_filmschedule_events.showtime < '" . ciniki_core_dbQuote($ciniki, $today->format('Y-m-d H:i')) . "' "
 			. "ORDER BY ciniki_filmschedule_events.showtime DESC ";	
 	} else {
-		$type_strsql .= "AND ciniki_filmschedule_events.showtime >= DATE()"
+		$strsql .= "AND ciniki_filmschedule_events.showtime > '" . ciniki_core_dbQuote($ciniki, $today->format('Y-m-d H:i')) . "' "
 			. "ORDER BY ciniki_filmschedule_events.showtime ASC ";	
 	}
 	if( isset($args['limit']) && $args['limit'] != '' && $args['limit'] > 0 && is_int($args['limit']) ) {
