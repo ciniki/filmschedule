@@ -56,7 +56,7 @@ function ciniki_filmschedule_web_eventDetails($ciniki, $settings, $business_id, 
 		return $rc;
 	}
 	if( !isset($rc['events']) || count($rc['events']) < 1 ) {
-		return array('stat'=>'404', 'err'=>array('pkg'=>'ciniki', 'code'=>'1762', 'msg'=>"I'm sorry, but we can't find the event you requested."));
+		return array('stat'=>'404', 'err'=>array('pkg'=>'ciniki', 'code'=>'2496', 'msg'=>"I'm sorry, but we can't find the event you requested."));
 	}
 	$event = array_pop($rc['events']);
 

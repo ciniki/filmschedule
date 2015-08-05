@@ -138,7 +138,7 @@ function ciniki_filmschedule_eventGet($ciniki) {
 				return $rc;
 			}
 			if( !isset($rc['events']) || !isset($rc['events'][0]) ) {
-				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1330', 'msg'=>'Unable to find event'));
+				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2474', 'msg'=>'Unable to find event'));
 			}
 			$event = $rc['events'][0]['event'];
 			ciniki_core_loadMethod($ciniki, 'ciniki', 'images', 'private', 'loadCacheThumbnail');
@@ -167,7 +167,7 @@ function ciniki_filmschedule_eventGet($ciniki) {
 				return $rc;
 			}
 			if( !isset($rc['events']) || !isset($rc['events'][0]) ) {
-				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'1331', 'msg'=>'Unable to find event'));
+				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2475', 'msg'=>'Unable to find event'));
 			}
 			$event = $rc['events'][0]['event'];
 		}
