@@ -139,8 +139,8 @@ function ciniki_filmschedule_main() {
 			return 'M.startApp(\'ciniki.filmschedule.images\',null,\'M.ciniki_filmschedule_main.showEvent();\',\'mc\',{\'event_image_id\':\'' + d.image.id + '\'});';
 		};
 		this.event.addButton('edit', 'Edit', 'M.ciniki_filmschedule_main.showEdit(\'M.ciniki_filmschedule_main.showEvent();\',M.ciniki_filmschedule_main.event.event_id);');
-		this.event.addLeftButton('website', 'Preview', 'M.showWebsite(\'/filmschedule/\'+M.ciniki_filmschedule_main.event.data.permalink);');
 		this.event.addClose('Back');
+		this.event.addLeftButton('website', 'Preview', 'M.showWebsite(\'/filmschedule/\'+M.ciniki_filmschedule_main.event.data.permalink);');
 
 		//
 		// The panel for a site's menu
