@@ -11,8 +11,8 @@
 // -------
 //
 function ciniki_filmschedule_maps($ciniki) {
-	$maps = array();
+    $maps = array();
 
-	return array('stat'=>'ok', 'maps'=>$maps);
+    return array('stat'=>'ok', 'maps'=>$maps);
 }
 ?>

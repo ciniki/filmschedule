@@ -10,10 +10,10 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:			The ID of the business to get the details for.
-// event_id:			The ID of the event to get the history for.
-// field:				The field to get the history for. This can be any of the elements 
-//						returned by the ciniki.filmschedule.get method.
+// business_id:         The ID of the business to get the details for.
+// event_id:            The ID of the event to get the history for.
+// field:               The field to get the history for. This can be any of the elements 
+//                      returned by the ciniki.filmschedule.get method.
 //
 // Returns
 // -------
@@ -23,43 +23,43 @@
 // </history>
 //
 function ciniki_filmschedule_eventHistory($ciniki) {
-	//
-	// Find all the required and optional arguments
-	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
-	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
-		'event_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Event'), 
-		'field'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'field'), 
-		));
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	$args = $rc['args'];
-	
-	//
-	// Check access to business_id as owner, or sys admin
-	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'filmschedule', 'private', 'checkAccess');
-	$rc = ciniki_filmschedule_checkAccess($ciniki, $args['business_id'], 'ciniki.filmschedule.eventHistory');
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
+    //
+    // Find all the required and optional arguments
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
+    $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
+        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'event_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Event'), 
+        'field'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'field'), 
+        ));
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    $args = $rc['args'];
+    
+    //
+    // Check access to business_id as owner, or sys admin
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'filmschedule', 'private', 'checkAccess');
+    $rc = ciniki_filmschedule_checkAccess($ciniki, $args['business_id'], 'ciniki.filmschedule.eventHistory');
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
 
-	if( $args['field'] == 'showtime' ) {
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistoryReformat');
-		return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.filmschedule', 'ciniki_filmschedule_history', $args['business_id'], 'ciniki_filmschedule_events', $args['event_id'], $args['field'],'utcdatetime');
-	}
-	elseif( $args['field'] == 'showtime_date' ) {
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistoryReformat');
-		return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.filmschedule', 'ciniki_filmschedule_history', $args['business_id'], 'ciniki_filmschedule_events', $args['event_id'], 'showtime','utcdate');
-	}
-	elseif( $args['field'] == 'showtime_time' ) {
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistoryReformat');
-		return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.filmschedule', 'ciniki_filmschedule_history', $args['business_id'], 'ciniki_filmschedule_events', $args['event_id'], 'showtime','utctime');
-	}
+    if( $args['field'] == 'showtime' ) {
+        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistoryReformat');
+        return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.filmschedule', 'ciniki_filmschedule_history', $args['business_id'], 'ciniki_filmschedule_events', $args['event_id'], $args['field'],'utcdatetime');
+    }
+    elseif( $args['field'] == 'showtime_date' ) {
+        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistoryReformat');
+        return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.filmschedule', 'ciniki_filmschedule_history', $args['business_id'], 'ciniki_filmschedule_events', $args['event_id'], 'showtime','utcdate');
+    }
+    elseif( $args['field'] == 'showtime_time' ) {
+        ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistoryReformat');
+        return ciniki_core_dbGetModuleHistoryReformat($ciniki, 'ciniki.filmschedule', 'ciniki_filmschedule_history', $args['business_id'], 'ciniki_filmschedule_events', $args['event_id'], 'showtime','utctime');
+    }
 
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistory');
-	return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.filmschedule', 'ciniki_filmschedule_history', $args['business_id'], 'ciniki_filmschedule_events', $args['event_id'], $args['field']);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistory');
+    return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.filmschedule', 'ciniki_filmschedule_history', $args['business_id'], 'ciniki_filmschedule_events', $args['event_id'], $args['field']);
 }
 ?>
