@@ -15,23 +15,18 @@
 function ciniki_filmschedule_hooks_uiSettings($ciniki, $business_id, $args) {
 
     //
-    // Any settings for the module
+    // Setup the default response
     //
-    $settings = array();
-
-    //
-    // Setup the menu items
-    //
-    $menu = array();
+    $rsp = array('stat'=>'ok', 'menu_items'=>array());
 
     //
     // Check permissions for what menu items should be available
     //
     if( isset($ciniki['business']['modules']['ciniki.filmschedule'])
-        && ($args['permissions']['owners'] == 'yes'
-            || $args['permissions']['employees'] == 'yes'
-            || $args['permissions']['resellers'] == 'yes'
-            || ($ciniki['session']['users']['perms']&0x01) == 0x01
+        && (isset($args['permissions']['owners'])
+            || isset($args['permissions']['employees'])
+            || isset($args['permissions']['resellers'])
+            || ($ciniki['session']['user']['perms']&0x01) == 0x01
             )
         ) {
         $menu_item = array(
@@ -39,9 +34,9 @@ function ciniki_filmschedule_hooks_uiSettings($ciniki, $business_id, $args) {
             'label'=>'Film Schedule', 
             'edit'=>array('app'=>'ciniki.filmschedule.main'),
             );
-        $menu[] = $menu_item;
+        $rsp['menu_items'][] = $menu_item;
     } 
 
-    return array('stat'=>'ok', 'settings'=>$settings, 'menu_items'=>$menu);  
+    return $rsp;
 }
 ?>
