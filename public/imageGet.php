@@ -64,7 +64,7 @@ function ciniki_filmschedule_imageGet($ciniki) {
         return $rc;
     }
     if( !isset($rc['images']) ) {
-        return array('stat'=>'ok', 'err'=>array('pkg'=>'ciniki', 'code'=>'2484', 'msg'=>'Unable to find image'));
+        return array('stat'=>'ok', 'err'=>array('code'=>'ciniki.filmschedule.15', 'msg'=>'Unable to find image'));
     }
     $image = $rc['images'][0]['image'];
     

@@ -64,7 +64,7 @@ function ciniki_filmschedule_eventAdd(&$ciniki) {
         return $rc;
     }
     if( $rc['num_rows'] > 0 ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2472', 'msg'=>'You already have an event with this name, please choose another name'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.filmschedule.4', 'msg'=>'You already have an event with this name, please choose another name'));
     }
 
     //

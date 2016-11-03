@@ -62,7 +62,7 @@ function ciniki_filmschedule_linkGet($ciniki) {
         return $rc;
     }
     if( !isset($rc['links']) ) {
-        return array('stat'=>'ok', 'err'=>array('pkg'=>'ciniki', 'code'=>'2362', 'msg'=>'Unable to find link'));
+        return array('stat'=>'ok', 'err'=>array('code'=>'ciniki.filmschedule.20', 'msg'=>'Unable to find link'));
     }
     $link = $rc['links'][0]['link'];
     

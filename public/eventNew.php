@@ -57,7 +57,7 @@ function ciniki_filmschedule_eventNew($ciniki) {
         $rc = ciniki_core_tagsList($ciniki, 'ciniki.filmschedule', $args['business_id'], 
             'ciniki_filmschedule_tags', 10);
         if( $rc['stat'] != 'ok' ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2476', 'msg'=>'Unable to get list of categories', 'err'=>$rc['err']));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.filmschedule.8', 'msg'=>'Unable to get list of categories', 'err'=>$rc['err']));
         }
         if( isset($rc['tags']) ) {
             $categories = $rc['tags'];
