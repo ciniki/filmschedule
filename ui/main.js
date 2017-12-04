@@ -1,5 +1,5 @@
 //
-// This app will handle the listing, additions and deletions of filmschedule.  These are associated business.
+// This app will handle the listing, additions and deletions of filmschedule.  These are associated tenant.
 //
 function ciniki_filmschedule_main() {
     //
@@ -84,7 +84,7 @@ function ciniki_filmschedule_main() {
         };
         this.event.addDropImage = function(iid) {
             var rsp = M.api.getJSON('ciniki.filmschedule.imageAdd',
-                {'business_id':M.curBusinessID, 'image_id':iid, 'event_id':M.ciniki_filmschedule_main.event.event_id});
+                {'tnid':M.curTenantID, 'image_id':iid, 'event_id':M.ciniki_filmschedule_main.event.event_id});
             if( rsp.stat != 'ok' ) {
                 M.api.err(rsp);
                 return false;
@@ -93,7 +93,7 @@ function ciniki_filmschedule_main() {
         };
         this.event.addDropImageRefresh = function() {
             if( M.ciniki_filmschedule_main.event.event_id > 0 ) {
-                var rsp = M.api.getJSONCb('ciniki.filmschedule.eventGet', {'business_id':M.curBusinessID, 
+                var rsp = M.api.getJSONCb('ciniki.filmschedule.eventGet', {'tnid':M.curTenantID, 
                     'event_id':M.ciniki_filmschedule_main.event.event_id, 'images':'yes'}, function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
@@ -172,7 +172,7 @@ function ciniki_filmschedule_main() {
             };  
         this.edit.fieldValue = function(s, i, d) { return this.data[i]; }
         this.edit.fieldHistoryArgs = function(s, i) {
-            return {'method':'ciniki.filmschedule.eventHistory', 'args':{'business_id':M.curBusinessID, 
+            return {'method':'ciniki.filmschedule.eventHistory', 'args':{'tnid':M.curTenantID, 
                 'event_id':this.event_id, 'field':i}};
         }
         this.edit.addDropImage = function(iid) {
@@ -207,8 +207,8 @@ function ciniki_filmschedule_main() {
             return false;
         } 
 
-        if( M.curBusiness.modules['ciniki.sponsors'] != null 
-            && (M.curBusiness.modules['ciniki.sponsors'].flags&0x02) ) {
+        if( M.curTenant.modules['ciniki.sponsors'] != null 
+            && (M.curTenant.modules['ciniki.sponsors'].flags&0x02) ) {
             this.event.sections.sponsors.visible = 'yes';
         } else {
             this.event.sections.sponsors.visible = 'no';
@@ -220,7 +220,7 @@ function ciniki_filmschedule_main() {
     this.showMenu = function(cb) {
         this.menu.data = {};
         if( this.menu.rightbuttons.edit != null ) { delete(this.menu.rightbuttons.edit); }
-        M.api.getJSONCb('ciniki.filmschedule.eventList', {'business_id':M.curBusinessID}, function(rsp) {
+        M.api.getJSONCb('ciniki.filmschedule.eventList', {'tnid':M.curTenantID}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
@@ -235,7 +235,7 @@ function ciniki_filmschedule_main() {
     this.showEvent = function(cb, eid) {
         this.event.reset();
         if( eid != null ) { this.event.event_id = eid; }
-        var rsp = M.api.getJSONCb('ciniki.filmschedule.eventGet', {'business_id':M.curBusinessID, 
+        var rsp = M.api.getJSONCb('ciniki.filmschedule.eventGet', {'tnid':M.curTenantID, 
             'event_id':this.event.event_id, 'images':'yes', 'sponsors':'yes', 'links':'yes'}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
@@ -255,7 +255,7 @@ function ciniki_filmschedule_main() {
         this.edit.sections._buttons.buttons.delete.visible = (this.edit.event_id>0?'yes':'no');
         this.edit.reset();
         this.edit.sections._buttons.buttons.delete.visible = 'yes';
-        M.api.getJSONCb('ciniki.filmschedule.eventGet', {'business_id':M.curBusinessID, 
+        M.api.getJSONCb('ciniki.filmschedule.eventGet', {'tnid':M.curTenantID, 
             'event_id':this.edit.event_id, 'webcollections':'yes', 'categories':'yes', 'objects':'yes'}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
@@ -278,7 +278,7 @@ function ciniki_filmschedule_main() {
             }
             if( c != '' ) {
                 var rsp = M.api.postJSONCb('ciniki.filmschedule.eventUpdate', 
-                    {'business_id':M.curBusinessID, 'event_id':M.ciniki_filmschedule_main.edit.event_id}, c,
+                    {'tnid':M.curTenantID, 'event_id':M.ciniki_filmschedule_main.edit.event_id}, c,
                     function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
@@ -294,7 +294,7 @@ function ciniki_filmschedule_main() {
                 c += '&showtime=' + encodeURIComponent(showtime);
             if( c != '' ) {
                 var rsp = M.api.postJSONCb('ciniki.filmschedule.eventAdd', 
-                    {'business_id':M.curBusinessID}, c, function(rsp) {
+                    {'tnid':M.curTenantID}, c, function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
                             return false;
@@ -316,7 +316,7 @@ function ciniki_filmschedule_main() {
     this.removeEvent = function() {
         if( confirm("Are you sure you want to remove '" + this.event.data.name + "' as an event ?") ) {
             var rsp = M.api.getJSONCb('ciniki.filmschedule.eventDelete', 
-                {'business_id':M.curBusinessID, 'event_id':M.ciniki_filmschedule_main.event.event_id}, function(rsp) {
+                {'tnid':M.curTenantID, 'event_id':M.ciniki_filmschedule_main.event.event_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;

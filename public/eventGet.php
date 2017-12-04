@@ -8,7 +8,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:     The ID of the business the event is attached to.
+// tnid:     The ID of the tenant the event is attached to.
 // event_id:        The ID of the event to get the details for.
 // 
 // Returns
@@ -23,7 +23,7 @@ function ciniki_filmschedule_eventGet($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'event_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Event'), 
         'images'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Images'),
         'files'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Files'),
@@ -37,10 +37,10 @@ function ciniki_filmschedule_eventGet($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'filmschedule', 'private', 'checkAccess');
-    $rc = ciniki_filmschedule_checkAccess($ciniki, $args['business_id'], 'ciniki.filmschedule.eventGet'); 
+    $rc = ciniki_filmschedule_checkAccess($ciniki, $args['tnid'], 'ciniki.filmschedule.eventGet'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -49,10 +49,10 @@ function ciniki_filmschedule_eventGet($ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 
     //
-    // Load the business intl settings
+    // Load the tenant intl settings
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'intlSettings');
-    $rc = ciniki_businesses_intlSettings($ciniki, $args['business_id']);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'intlSettings');
+    $rc = ciniki_tenants_intlSettings($ciniki, $args['tnid']);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -114,10 +114,10 @@ function ciniki_filmschedule_eventGet($ciniki) {
         $strsql .= "FROM ciniki_filmschedule_events ";
         if( isset($args['images']) && $args['images'] == 'yes' ) {
             $strsql .= "LEFT JOIN ciniki_filmschedule_images ON (ciniki_filmschedule_events.id = ciniki_filmschedule_images.event_id "
-                . "AND ciniki_filmschedule_images.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                . "AND ciniki_filmschedule_images.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                 . ") ";
         }
-        $strsql .= "WHERE ciniki_filmschedule_events.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        $strsql .= "WHERE ciniki_filmschedule_events.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "AND ciniki_filmschedule_events.id = '" . ciniki_core_dbQuote($ciniki, $args['event_id']) . "' "
             . "";
         
@@ -145,7 +145,7 @@ function ciniki_filmschedule_eventGet($ciniki) {
             if( isset($event['images']) ) {
                 foreach($event['images'] as $img_id => $img) {
                     if( isset($img['image']['image_id']) && $img['image']['image_id'] > 0 ) {
-                        $rc = ciniki_images_loadCacheThumbnail($ciniki, $args['business_id'], $img['image']['image_id'], 75);
+                        $rc = ciniki_images_loadCacheThumbnail($ciniki, $args['tnid'], $img['image']['image_id'], 75);
                         if( $rc['stat'] != 'ok' ) {
                             return $rc;
                         }
@@ -178,7 +178,7 @@ function ciniki_filmschedule_eventGet($ciniki) {
         if( isset($args['files']) && $args['files'] == 'yes' ) {
             $strsql = "SELECT id, name, url, description "
                 . "FROM ciniki_filmschedule_links "
-                . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                 . "AND ciniki_filmschedule_links.event_id = '" . ciniki_core_dbQuote($ciniki, $args['event_id']) . "' "
                 . "";
             $rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.blog', array(
@@ -199,11 +199,11 @@ function ciniki_filmschedule_eventGet($ciniki) {
         // Get any sponsors for this event, and that references for sponsors is enabled
         //
         if( isset($args['sponsors']) && $args['sponsors'] == 'yes' 
-            && isset($ciniki['business']['modules']['ciniki.sponsors']) 
-            && ($ciniki['business']['modules']['ciniki.sponsors']['flags']&0x02) == 0x02
+            && isset($ciniki['tenant']['modules']['ciniki.sponsors']) 
+            && ($ciniki['tenant']['modules']['ciniki.sponsors']['flags']&0x02) == 0x02
             ) {
             ciniki_core_loadMethod($ciniki, 'ciniki', 'sponsors', 'hooks', 'sponsorList');
-            $rc = ciniki_sponsors_hooks_sponsorList($ciniki, $args['business_id'], 
+            $rc = ciniki_sponsors_hooks_sponsorList($ciniki, $args['tnid'], 
                 array('object'=>'ciniki.filmschedule.event', 'object_id'=>$args['event_id']));
             if( $rc['stat'] != 'ok' ) {
                 return $rc;

@@ -9,15 +9,15 @@
 // Returns
 // -------
 //
-function ciniki_filmschedule_web_eventDetails($ciniki, $settings, $business_id, $permalink) {
+function ciniki_filmschedule_web_eventDetails($ciniki, $settings, $tnid, $permalink) {
 
     
 //  print "<pre>" . print_r($ciniki, true) . "</pre>";
     //
     // Load INTL settings
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'intlSettings');
-    $rc = ciniki_businesses_intlSettings($ciniki, $business_id);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'intlSettings');
+    $rc = ciniki_tenants_intlSettings($ciniki, $tnid);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -37,7 +37,7 @@ function ciniki_filmschedule_web_eventDetails($ciniki, $settings, $business_id, 
         . "ciniki_filmschedule_events.synopsis, "
         . "ciniki_filmschedule_events.description "
         . "FROM ciniki_filmschedule_events "
-        . "WHERE ciniki_filmschedule_events.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "WHERE ciniki_filmschedule_events.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "AND ciniki_filmschedule_events.permalink = '" . ciniki_core_dbQuote($ciniki, $permalink) . "' "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryIDTree');
@@ -66,7 +66,7 @@ function ciniki_filmschedule_web_eventDetails($ciniki, $settings, $business_id, 
     $strsql = "SELECT id, image_id, name AS title, url, permalink, description, "
         . "UNIX_TIMESTAMP(ciniki_filmschedule_images.last_updated) AS last_updated "
         . "FROM ciniki_filmschedule_images "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "AND ciniki_filmschedule_images.event_id = '" . ciniki_core_dbQuote($ciniki, $event['id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.events', array(
@@ -87,7 +87,7 @@ function ciniki_filmschedule_web_eventDetails($ciniki, $settings, $business_id, 
     //
     $strsql = "SELECT id, name, url, description "
         . "FROM ciniki_filmschedule_links "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "AND ciniki_filmschedule_links.event_id = '" . ciniki_core_dbQuote($ciniki, $event['id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.events', array(
@@ -106,11 +106,11 @@ function ciniki_filmschedule_web_eventDetails($ciniki, $settings, $business_id, 
     //
     // Get any sponsors for this event, and that references for sponsors is enabled
     //
-    if( isset($ciniki['business']['modules']['ciniki.sponsors']) 
-        && ($ciniki['business']['modules']['ciniki.sponsors']['flags']&0x02) == 0x02
+    if( isset($ciniki['tenant']['modules']['ciniki.sponsors']) 
+        && ($ciniki['tenant']['modules']['ciniki.sponsors']['flags']&0x02) == 0x02
         ) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'sponsors', 'web', 'sponsorRefList');
-        $rc = ciniki_sponsors_web_sponsorRefList($ciniki, $settings, $business_id, 
+        $rc = ciniki_sponsors_web_sponsorRefList($ciniki, $settings, $tnid, 
             'ciniki.events.event', $event['id']);
         if( $rc['stat'] != 'ok' ) {
             return $rc;

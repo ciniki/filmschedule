@@ -27,7 +27,7 @@ function ciniki_filmschedule_links() {
             };
         this.edit.fieldValue = function(s, i, d) { return this.data[i]; }
         this.edit.fieldHistoryArgs = function(s, i) {
-            return {'method':'ciniki.filmschedule.linkHistory', 'args':{'business_id':M.curBusinessID, 
+            return {'method':'ciniki.filmschedule.linkHistory', 'args':{'tnid':M.curTenantID, 
                 'link_id':this.link_id, 'field':i}};
         };
         this.edit.addButton('save', 'Save', 'M.ciniki_filmschedule_links.saveLink();');
@@ -68,7 +68,7 @@ function ciniki_filmschedule_links() {
             this.edit.reset();
             this.edit.sections._buttons.buttons.delete.visible = 'yes';
             var rsp = M.api.getJSONCb('ciniki.filmschedule.linkGet', 
-                {'business_id':M.curBusinessID, 'link_id':this.edit.link_id}, function(rsp) {
+                {'tnid':M.curTenantID, 'link_id':this.edit.link_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;
@@ -92,7 +92,7 @@ function ciniki_filmschedule_links() {
             var c = this.edit.serializeForm('no');
             if( c != '' ) {
                 M.api.postJSONCb('ciniki.filmschedule.linkUpdate', 
-                    {'business_id':M.curBusinessID, 'link_id':this.edit.link_id}, c, function(rsp) {
+                    {'tnid':M.curTenantID, 'link_id':this.edit.link_id}, c, function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
                             return false;
@@ -106,7 +106,7 @@ function ciniki_filmschedule_links() {
             var c = this.edit.serializeForm('yes');
             if( c != '' ) {
                 M.api.postJSONCb('ciniki.filmschedule.linkAdd', 
-                    {'business_id':M.curBusinessID, 'event_id':this.edit.event_id}, c, function(rsp) {
+                    {'tnid':M.curTenantID, 'event_id':this.edit.event_id}, c, function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
                             return false;
@@ -122,7 +122,7 @@ function ciniki_filmschedule_links() {
     this.deleteLink = function() {
         if( confirm("Are you sure you want to remove this link?") ) {
             var rsp = M.api.getJSONCb('ciniki.filmschedule.linkDelete', 
-                {'business_id':M.curBusinessID, 'link_id':this.edit.link_id}, function(rsp) {
+                {'tnid':M.curTenantID, 'link_id':this.edit.link_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;

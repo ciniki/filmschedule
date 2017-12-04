@@ -9,13 +9,13 @@
 // Returns
 // -------
 //
-function ciniki_filmschedule_web_eventList($ciniki, $settings, $business_id, $args) {
+function ciniki_filmschedule_web_eventList($ciniki, $settings, $tnid, $args) {
 
     //
-    // Load the business settings
+    // Load the tenant settings
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'intlSettings');
-    $rc = ciniki_businesses_intlSettings($ciniki, $business_id);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'intlSettings');
+    $rc = ciniki_tenants_intlSettings($ciniki, $tnid);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -40,7 +40,7 @@ function ciniki_filmschedule_web_eventList($ciniki, $settings, $business_id, $ar
         . "ciniki_filmschedule_events.synopsis, "
         . "'yes' AS isdetails "
         . "FROM ciniki_filmschedule_events "
-        . "WHERE ciniki_filmschedule_events.business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+        . "WHERE ciniki_filmschedule_events.tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
         . "";
     if( isset($args['type']) && $args['type'] == 'past' ) {
         $strsql .= "AND ciniki_filmschedule_events.showtime < '" . ciniki_core_dbQuote($ciniki, $today->format('Y-m-d H:i')) . "' "
