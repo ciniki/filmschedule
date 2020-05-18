@@ -48,7 +48,7 @@ function ciniki_filmschedule_links() {
         //
         var appContainer = M.createContainer(appPrefix, 'ciniki_filmschedule_links', 'yes');
         if( appContainer == null ) {
-            alert('App Error');
+            M.alert('App Error');
             return false;
         } 
 
@@ -120,15 +120,15 @@ function ciniki_filmschedule_links() {
     };
 
     this.deleteLink = function() {
-        if( confirm("Are you sure you want to remove this link?") ) {
+        M.confirm("Are you sure you want to remove this link?",null,function() {
             var rsp = M.api.getJSONCb('ciniki.filmschedule.linkDelete', 
-                {'tnid':M.curTenantID, 'link_id':this.edit.link_id}, function(rsp) {
+                {'tnid':M.curTenantID, 'link_id':M.ciniki_filmschedule_links.edit.link_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;
                     }
                     M.ciniki_filmschedule_links.edit.close();
                 });
-        }   
+        });
     };
 }

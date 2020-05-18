@@ -60,7 +60,7 @@ function ciniki_filmschedule_images() {
         //
         var appContainer = M.createContainer(appPrefix, 'ciniki_filmschedule_images', 'yes');
         if( appContainer == null ) {
-            alert('App Error');
+            M.alert('App Error');
             return false;
         }
 
@@ -135,15 +135,15 @@ function ciniki_filmschedule_images() {
     };
 
     this.deleteImage = function() {
-        if( confirm('Are you sure you want to delete this image?') ) {
+        M.confirm('Are you sure you want to delete this image?',null,function() {
             var rsp = M.api.getJSONCb('ciniki.filmschedule.imageDelete', {'tnid':M.curTenantID, 
-                'event_image_id':this.edit.event_image_id}, function(rsp) {
+                'event_image_id':M.ciniki_filmschedule_images.edit.event_image_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;
                     }
                     M.ciniki_filmschedule_images.edit.close();
                 });
-        }
+        });
     };
 }
